@@ -95,6 +95,48 @@
         center: [-121.7401, 47.2511] // starting center
       });
 
+      async function geojsonFetch() {
+        // add layers
+        let response = await fetch('assets/wa-covid-data-102521.geojson');
+        let waState = await response.json();
+
+        map.on('load', function loadingData() {
+          map.addSource('waState', {
+            type: 'geojson',
+            data: waState
+          });
+
+          map.addLayer({
+            'id': 'waState-layer',
+            'type': 'fill',
+            'source': 'waState',
+            'paint': {
+              'fill-color': [
+                'step',
+                ['get', 'fullyVaxPer10k'],
+                '#eff3ff',
+                500,
+                '#c6dbef',
+                1500,
+                '#9ecae1',
+                3000,
+                '#6baed6',
+                4500,
+                '#3182bd',
+                6000,
+                '#08519c'
+              ],
+              'fill-outline-color': '#BBBBBB',
+              'fill-opacity': 0.7,
+            }
+          });
+
+        });
+
+        // add legend
+      };
+
+      geojsonFetch();
     </script>
 
 </body>
