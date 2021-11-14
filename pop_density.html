@@ -156,11 +156,37 @@
             '#BD002670',
             '#80002670'
           ];
+
+          const legend = document.getElementById('legend');
+          legend.innerHTML = "<b>Population Density<br>(people/sq.mi.)</b><br><br>";
+
+          layers.forEach((layer, i) => {
+            const color = colors[i];
+            const item = document.createElement('div');
+            const key = document.createElement('span');
+            key.className = 'legend-key';
+            key.style.backgroundColor = color;
+
+            const value = document.createElement('span');
+            value.innerHTML = `${layer}`;
+            item.appendChild(key);
+            item.appendChild(value);
+            legend.appendChild(item);
+          });
+
+          map.on('mousemove', ({point}) => {
+            const state = map.queryRenderedFeatures(point, {
+              layers: ['stateData-layer']
+            });
+            document.getElementById('text-escription').innerHTML = state.length ?
+                `<h3>${state[0].properties.name}</h3><p><strong><em>${state[0].properties.density}</strong> people per square mile</em></p>` :
+                `<p>Hover over a state!</p>`;
+          });
+
         });
       };
 
       geojsonFetch();
-geojsonFetch();
     </script>
 
 </body>
